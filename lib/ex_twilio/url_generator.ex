@@ -59,6 +59,10 @@ defmodule ExTwilio.UrlGenerator do
           url = add_segments(Config.fax_url(), module, id, options)
           {url, options}
 
+        ["ExTwilio", "Conversation" | _] ->
+          url = add_segments(Config.conversation_url(), module, id, options)
+          {url, options}
+
         ["ExTwilio", "Studio" | _] ->
           options = add_flow_to_options(module, options)
           url = add_segments(Config.studio_url(), module, id, options)
