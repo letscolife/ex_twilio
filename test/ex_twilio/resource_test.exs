@@ -5,7 +5,19 @@ defmodule ExTwilio.ResourceTest do
 
   defmodule TestResource do
     defstruct sid: nil
-    use ExTwilio.Resource, import: [:stream, :all, :list, :find, :create, :update, :destroy]
+
+    use ExTwilio.Resource,
+      import: [
+        :stream,
+        :all,
+        :list,
+        :find,
+        :create,
+        :update,
+        :destroy,
+        :find_config,
+        :update_config
+      ]
   end
 
   test "only imports specified methods" do
@@ -14,11 +26,14 @@ defmodule ExTwilio.ResourceTest do
       use ExTwilio.Resource, import: [:stream]
     end
 
-    Enum.each([:all, :list, :find, :create, :update, :destroy], fn method ->
-      assert_raise UndefinedFunctionError, fn ->
-        apply(ExclusiveMethods, method, ["id"])
+    Enum.each(
+      [:all, :list, :find, :create, :update, :destroy, :find_config, :update_config],
+      fn method ->
+        assert_raise UndefinedFunctionError, fn ->
+          apply(ExclusiveMethods, method, ["id"])
+        end
       end
-    end)
+    )
   end
 
   test ".new should return the module's struct" do
@@ -33,6 +48,13 @@ defmodule ExTwilio.ResourceTest do
     end
   end
 
+  test ".find_config should delegate to Api.find with a nil sid" do
+    with_mock Api, find: fn _, _, _ -> nil end do
+      TestResource.find_config()
+      assert called(Api.find(TestResource, nil, []))
+    end
+  end
+
   test ".create should delegate to Api.create" do
     with_mock Api, create: fn _, _, _ -> nil end do
       TestResource.create(field: "value")
@@ -44,6 +66,13 @@ defmodule ExTwilio.ResourceTest do
     with_mock Api, update: fn _, _, _, _ -> nil end do
       TestResource.update("id", field: "value")
       assert called(Api.update(TestResource, "id", [field: "value"], []))
+    end
+  end
+
+  test ".update_config should delegate to Api.update with an empty sid" do
+    with_mock Api, update: fn _, _, _, _ -> nil end do
+      TestResource.update_config(field: "value")
+      assert called(Api.update(TestResource, "", [field: "value"], []))
     end
   end
 
