@@ -65,6 +65,8 @@ defmodule ExTwilio.Config do
 
   def notify_url, do: "https://notify.twilio.com/v1"
 
+  def conversation_url, do: "https://conversations.twilio.com/v1"
+
   def studio_url, do: "https://studio.twilio.com/v1"
 
   def video_url, do: "https://video.twilio.com/v1"

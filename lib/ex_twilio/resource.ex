@@ -62,6 +62,11 @@ defmodule ExTwilio.Resource do
         def find(sid, options \\ []), do: Api.find(__MODULE__, sid, options)
       end
 
+      if :find_config in import_functions do
+        @spec find_config(list) :: Parser.parsed_list_response()
+        def find_config(options \\ []), do: Api.find(__MODULE__, nil, options)
+      end
+
       if :create in import_functions do
         @spec create(Api.data(), list) :: Parser.parsed_response()
         def create(data, options \\ []), do: Api.create(__MODULE__, data, options)
@@ -70,6 +75,11 @@ defmodule ExTwilio.Resource do
       if :update in import_functions do
         @spec update(String.t(), Api.data(), list) :: Parser.parsed_response()
         def update(sid, data, options \\ []), do: Api.update(__MODULE__, sid, data, options)
+      end
+
+      if :update_config in import_functions do
+        @spec update_config(Api.data(), list) :: Parser.parsed_response()
+        def update_config(data, options \\ []), do: Api.update(__MODULE__, "", data, options)
       end
 
       if :destroy in import_functions do
