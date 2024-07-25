@@ -14,6 +14,10 @@ defmodule ExTwilio.Conversation.Configuration do
 
       ExTwilio.Conversation.Configuration.update_config(default_conversation_role_sid: chat_service_sid)
 
+  If you are using a Scoped Service, you must pass the service sid to all functions in this module.
+
+      ExTwilio.Conversation.Configuration.find_config(service: "ISXXXX")
+
   """
   defstruct chat_service_sid: nil,
             default_chat_service_role_sid: nil,
@@ -28,6 +32,9 @@ defmodule ExTwilio.Conversation.Configuration do
   alias ExTwilio.UrlGenerator, as: Url
   alias ExTwilio.{Api, Parser}
 
-  def parents, do: [:conversation]
+  def parents do
+    [%ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}]
+  end
+
   def resource_name, do: "Configuration"
 end

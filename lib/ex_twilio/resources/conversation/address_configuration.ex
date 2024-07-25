@@ -33,20 +33,13 @@ defmodule ExTwilio.Conversation.AddressConfiguration do
       :destroy
     ]
 
-  @doc """
-  Find messages for a given conversation. Any options other than `[conversation: "sid"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.AddressConfiguration.find(message_sid, [conversation: "sid"])
-  """
-  @spec find(conversation: String.t()) :: Parser.success() | Parser.error()
-  def find(conversation: sid) do
-    Api.find(__MODULE__, nil, conversation: sid)
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service},
+      :conversation
+    ]
   end
 
-  def parents, do: [:conversation]
   def resource_name, do: "Configuration/Addresses"
   def resource_collection_name, do: "address_configurations"
 end

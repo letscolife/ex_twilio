@@ -12,6 +12,10 @@ defmodule ExTwilio.Conversation.ScopedWebhook do
       ExTwilio.Conversation.ScopedWebhook.create([body: "Hi"], [conversation: "CHXXXX"])
       ExTwilio.Conversation.ScopedWebhook.find(sid, [conversation: "CHXXXX"])
 
+  If you use Service-Scoped resources, you must pass in a Service SID (in addition to the conversation)
+
+      ExTwilio.Conversation.ScopedWebhook.create([body: "Hey"], [service: "ISXXXX", conversation: "CHXXXX"])
+      ExTwilio.Conversation.ScopedWebhook.find("IMXXXX", [service: "ISXXXX", conversation: "CHXXXX"])
   """
   defstruct account_sid: nil,
             configuration: nil,
@@ -32,20 +36,13 @@ defmodule ExTwilio.Conversation.ScopedWebhook do
       :destroy
     ]
 
-  @doc """
-  Find scoped webhooks for a given conversation. Any options other than `[conversation: "CHXXXX"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.ScopedWebhook.find(message_sid, [conversation: "CHXXXX"])
-  """
-  @spec find(conversation: String.t()) :: Parser.success() | Parser.error()
-  def find(conversation: sid) do
-    Api.find(__MODULE__, nil, conversation: sid)
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service},
+      :conversation
+    ]
   end
 
-  def parents, do: [:conversation]
   def resource_name, do: "Webhooks"
   def resource_collection_name, do: "webhooks"
 end

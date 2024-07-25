@@ -20,6 +20,12 @@ defmodule ExTwilio.Conversation.Message do
 
       ExTwilio.Conversation.Message.create([author: author, body: body], [conversation: conversation_sid]])
 
+  If you are using Service-Scoped resources, you must pass in a Service SID (in addition the conversation)
+  to all functions in this module.
+
+      ExTwilio.Conversation.Message.create([body: "Hi"], [service: "ISXXXX", conversation: "CHXXXX"])
+      ExTwilio.Conversation.Message.find("IMXXXX", [service: "ISXXXX", conversation: "CHXXXX"])
+
   """
   defstruct account_sid: nil,
             attributes: nil,
@@ -47,20 +53,13 @@ defmodule ExTwilio.Conversation.Message do
       :destroy
     ]
 
-  @doc """
-  Find messages for a given conversation. Any options other than `[conversation: "CHXXXX"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.Message.find(message_sid, [conversation: "CHXXXX"])
-  """
-  @spec find(conversation: String.t()) :: Parser.success() | Parser.error()
-  def find(conversation: sid) do
-    Api.find(__MODULE__, nil, conversation: sid)
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service},
+      :conversation
+    ]
   end
 
-  def parents, do: [:conversation]
   def resource_name, do: "Messages"
   def resource_collection_name, do: "messages"
 end

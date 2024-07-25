@@ -16,6 +16,11 @@ defmodule ExTwilio.Conversation.MessageReceipt do
 
       ExTwilio.Conversation.MessageReceipt.find(sid, [conversation: "CHXXXX", message: "IMXXXX])])
 
+  If you are using Service-Scoped resources, you must pass in a Service SID (in addition the conversation
+  and message) to all functions in this module.
+
+      ExTwilio.Conversation.MessageReceipt.find(sid, [service: "ISXXXX", conversation: "CHXXXX", message: "IMXXXX]
+
   """
   defstruct account_sid: nil,
             channel_message_sid: nil,
@@ -31,24 +36,13 @@ defmodule ExTwilio.Conversation.MessageReceipt do
 
   use ExTwilio.Resource, import: [:stream, :all, :find]
 
-  @doc """
-  Find messages for a given conversation. Any options other than `[conversation: "CHXXXX", message: "IMXXXX"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.Message.Receipt.find(receipt_sid, [conversation: "CHXXXX, sid", message: "IMXXXX])
-  """
-  @spec find(conversation: String.t(), message: String.t()) :: Parser.success() | Parser.error()
-  def find([conversation: _conversation_sid, message: _message_sid] = options) do
-    Api.find(__MODULE__, nil, options)
-  end
-
-  def parents,
-    do: [
+  def parents do
+    [
       :conversation,
-      %ExTwilio.Parent{module: ExTwilio.Conversation.Message, key: :message}
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Message, key: :message},
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}
     ]
+  end
 
   def resource_name, do: "Receipts"
   def resource_collection_name, do: "delivery_receipts"

@@ -12,6 +12,10 @@ defmodule ExTwilio.Conversation do
 
   Once the conversation is created, you'll want to add participants and send a message.
 
+  If you are using Service-Scoped resources, you must pass the service sid to all functions in this module.
+
+      {:ok, conversation} = ExTwilio.Conversation.create(friendly_name: "My First Conversation", service: "ISXXXX")
+
   """
   defstruct account_sid: nil,
             attributes: nil,
@@ -38,5 +42,7 @@ defmodule ExTwilio.Conversation do
       :destroy
     ]
 
-  def parents, do: [:account]
+  def parents do
+    [%ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}]
+  end
 end
