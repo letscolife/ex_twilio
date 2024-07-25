@@ -26,6 +26,16 @@ defmodule ExTwilio.Conversation.Participant do
         [conversation: "CHXXXX"]
       )
 
+  If you are using Service-Scoped resources, you must pass in a Service SID (in addition the conversation)
+
+    ExTwilio.Conversation.Participant.create(
+      [
+        "messaging_binding\.Address": "+16780987654",
+        identity: "some identity"
+      ],
+      [service: "ISXXXX", conversation: "CHXXXX"]
+    )
+
   """
   defstruct account_sid: nil,
             attributes: nil,
@@ -50,20 +60,13 @@ defmodule ExTwilio.Conversation.Participant do
       :destroy
     ]
 
-  @doc """
-  Find participants for a given conversation. Any options other than `[conversation: "sid"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.Participant.find(participant_sid, [conversation: "sid"])
-  """
-  @spec find(conversation: String.t()) :: Parser.success() | Parser.error()
-  def find(conversation: sid) do
-    Api.find(__MODULE__, nil, conversation: sid)
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service},
+      :conversation
+    ]
   end
 
-  def parents, do: [:conversation]
   def resource_name, do: "Participants"
   def resource_collection_name, do: "participants"
 end

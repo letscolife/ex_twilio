@@ -9,6 +9,11 @@ defmodule ExTwilio.Conversation.ParticipantConversation do
       ExTwilio.Conversation.ParticipantConversation.all(address: "+18889997777")
       ExTwilio.Conversation.ParticipantConversation.all(identity: "unique_identity")
 
+  If you are using Service-Scoped resources, you must pass the service sid to all functions in this module.
+
+      ExTwilio.Conversation.ParticipantConversation.all(address: "+18889997777", service: "ISXXXX")
+      ExTwilio.Conversation.ParticipantConversation.all(identity: "unique_identity", service: "ISXXXX")
+
   """
   defstruct account_sid: nil,
             chat_service_sid: nil,
@@ -28,6 +33,12 @@ defmodule ExTwilio.Conversation.ParticipantConversation do
             participant_user_sid: nil
 
   use ExTwilio.Resource, import: [:stream, :all]
+
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}
+    ]
+  end
 
   def resource_collection_name, do: "conversations"
 end

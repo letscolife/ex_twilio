@@ -14,6 +14,11 @@ defmodule ExTwilio.Conversation.UserConversation do
       ExTwilio.Conversation.UserConversation.all(user: "USXXXX", conversation: "")
       ExTwilio.Conversation.UserConversation.find(user: "USXXXX", conversation: "CHXXXX")
 
+  If you use Service-Scoped resources, you must pass in a Service SID (in addition to the conversation)
+
+      ExTwilio.Conversation.UserConversation.all(user: "USXXXX", conversation: "", service: "ISXXXX")
+      ExTwilio.Conversation.UserConversation.find(user: "USXXXX", conversation: "CHXXXX", service: "ISXXXX")
+
   """
   defstruct account_sid: nil,
             attributes: nil,
@@ -42,20 +47,6 @@ defmodule ExTwilio.Conversation.UserConversation do
       :update,
       :destroy
     ]
-
-  @doc """
-  Find messages for a given conversation. Any options other than `[user: "sid", conversation: "sid"]` will
-  result in a `FunctionClauseError`.
-
-  ## Examples
-
-      ExTwilio.Conversation.UserConversation.find(user: "USXXXX", conversation: "CHXXXX")
-  """
-
-  @spec find(user: String.t(), conversation: String.t()) :: Parser.success() | Parser.error()
-  def find([user: _, conversation: _] = options) do
-    Api.find(__MODULE__, nil, options)
-  end
 
   def parents,
     do: [

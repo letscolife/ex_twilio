@@ -14,6 +14,10 @@ defmodule ExTwilio.Conversation.Role do
 
       ExTwilio.Conversation.Roles.create(permission: "addParticipant", type "conversation", friendly_name: "FriendlyName")
 
+  If using a Scoped Service, you can must pass the service sid  to all functions in this module.
+
+      ExTwilio.Conversation.Roles.all(service: "ISXXXX")
+
   """
   defstruct account_sid: nil,
             chat_service_sid: nil,
@@ -35,7 +39,12 @@ defmodule ExTwilio.Conversation.Role do
       :destroy
     ]
 
-  def parents, do: [:conversation]
+  def parents do
+    [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}
+    ]
+  end
+
   def resource_name, do: "Roles"
   def resource_collection_name, do: "roles"
 end

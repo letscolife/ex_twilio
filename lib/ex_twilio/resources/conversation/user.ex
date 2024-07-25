@@ -10,6 +10,10 @@ defmodule ExTwilio.Conversation.User do
 
       ExTwilio.Conversation.User.create(identity: "unique_identity")
 
+  If you are using Service-Scoped resources, you must pass the service sid to all functions in this module.
+
+        ExTwilio.Conversation.User.create(identity: "unique_identity", service: "ISXXXX")
+
   """
   defstruct account_sid: nil,
             attributes: nil,
@@ -35,7 +39,10 @@ defmodule ExTwilio.Conversation.User do
       :destroy
     ]
 
-  def parents, do: [:conversation]
+  def parents do
+    [%ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}]
+  end
+
   def resource_name, do: "Users"
   def resource_collection_name, do: "users"
 end
