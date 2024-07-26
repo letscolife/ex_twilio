@@ -38,9 +38,9 @@ defmodule ExTwilio.Conversation.MessageReceipt do
 
   def parents do
     [
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service},
       :conversation,
-      %ExTwilio.Parent{module: ExTwilio.Conversation.Message, key: :message},
-      %ExTwilio.Parent{module: ExTwilio.Conversation.Service, key: :service}
+      %ExTwilio.Parent{module: ExTwilio.Conversation.Message, key: :message}
     ]
   end
 
